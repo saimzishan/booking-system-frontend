@@ -1,0 +1,1 @@
+FROM curvetomorrow/auslan-dev-image:v7.6-debug

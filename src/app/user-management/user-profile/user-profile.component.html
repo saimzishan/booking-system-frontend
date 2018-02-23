@@ -1,0 +1,103 @@
+<section id="submenu">
+  <app-user-header id="main-submenu-links">
+  </app-user-header>
+</section>
+
+<app-mobile-header title="USER PROFILE" backLink="/booking-management"></app-mobile-header>
+<div id="page-common">
+<main>
+  <form #user_profile_form="ngForm"  class="common-form reduced-top">
+    <div class="row small-collapse">
+      <div class="row-wrapper">
+        <div class="medium-6 columns">
+          <div class="form-field">
+            <label>FIRST NAME *	</label>
+
+            <input type="text" class="valid" placeholder="" [(ngModel)]="userModel.first_name" name="first_name" #first_name="ngModel" [rangeLength]="[2, 20]" required>
+            <span *ngIf="first_name.touched && !first_name.errors?.required && !first_name.errors?.rangeLength;" class="inline-icon inline-icon-valid valid"></span>
+            <span *ngIf="first_name.touched && (first_name.errors?.required || first_name.errors?.rangeLength);" class="inline-icon error">
+                      <span>Minimum 2 characters required.</span>!</span>
+          </div>
+        </div>
+        <div class="medium-6 columns">
+          <div class="form-field">
+            <label>LAST NAME *
+            </label>
+
+            <input type="text" class="valid" placeholder="" [(ngModel)]="userModel.last_name" name="last_name" #last_name="ngModel" [rangeLength]="[2, 30]" required>
+            <span *ngIf="last_name.touched && !last_name.errors?.required && !last_name.errors?.rangeLength;" class="inline-icon inline-icon-valid valid"></span>
+            <span *ngIf="last_name.touched && (last_name.errors?.required || last_name.errors?.rangeLength);" class="inline-icon error">
+                          <span>Minimum 2 characters required.</span>!</span>
+          </div>
+        </div>
+        <div class="medium-6 columns">
+          <div class="form-field">
+            <label>EMAIL *
+            </label>
+            <input type="email" class="inline-icon-user-email" id="email" placeholder="Enter your email"
+            [(ngModel)]="userModel.email" name="email" #email="ngModel" email required>
+            <span *ngIf="email.touched && !email.errors?.email;" class="inline-icon inline-icon-valid valid"></span>
+            <span *ngIf="(email.dirty || email.touched) && (email.errors?.required || email.errors?.email);" class="inline-icon error">
+              <span>Email is required</span>!</span>
+          </div>
+        </div>
+        <div class="medium-6 columns">
+          <div class="form-field">
+            <label>MOBILE PHONE * </label>
+            <input type="tel" phone_num="true" placeholder="" [(ngModel)]="userModel.mobile" name="mobile" #mobile="ngModel" required [rangeLength]="[10, 11]">
+            <span *ngIf="mobile.touched && !mobile.errors?.required && !mobile.errors?.rangeLength;" class="inline-icon inline-icon-valid valid"></span>
+            <span *ngIf="mobile.touched && mobile.errors?.required || mobile.errors?.rangeLength;" class="inline-icon error">
+                      <span>Minimum 6 digits required.</span>!</span>
+          </div>
+        </div>
+        <div *ngIf="userModel.type === 'IndividualClient' || userModel.type === 'OrganisationalRepresentative'" class="medium-6 columns">
+          <div class="form-field">
+            <label>PHONE * </label>
+            <input type="tel" phone_num="true" placeholder="" [(ngModel)]="userModel.phone" name="phone" #phone="ngModel" required>
+            <span *ngIf="phone.touched && !phone.errors?.required;" class="inline-icon inline-icon-valid valid"></span>
+            <span *ngIf="phone.touched && phone.errors?.required;" class="inline-icon error">
+                      <span>Minimum 6 digits required.</span>!</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="(userModel.type === 'Administrator' || userModel.type === 'BookingOfficer' ) && userModel.verified">
+        <div class="medium-6 columns">
+          <div class="form-field">
+            <label>STATUS</label>
+            <select name="selStatus" [(ngModel)]="selectedStatus">
+              <option *ngFor="let i of userStatusArray" [value]="i.name" >{{i.name}}</option>
+            </select>
+          </div>
+        </div>
+        </ng-container>
+        <div class="medium-6 columns">
+          <div class="form-field">
+            <label>CHANGE PICTURE:</label>
+            <input type="file" accept="image/*" (change)="handleFileSelect($event)"
+                   name="uploader"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-interpreter [displayCalendar]="true" *ngIf="userModel.type === 'Interpreter'" [userModel]="userModel"></app-interpreter>
+    <app-ind-client *ngIf="userModel.type === 'IndividualClient'" [userModel]="userModel"></app-ind-client>
+    <app-org-rep *ngIf="userModel.type === 'Organisation' || userModel.type === 'OrganisationalRepresentative'" [userModel]="userModel"></app-org-rep>
+
+    <app-interpreter-box
+            [isPreffered]="true"
+            [selectedInterpreters]="userModel.prefferedInterpreters"
+            *ngIf="userModel.type === 'IndividualClient' || userModel.type === 'Organisation' || userModel.type === 'OrganisationalRepresentative'"
+    ></app-interpreter-box>
+    <br>
+    <app-interpreter-box
+            [isPreffered]="false"
+            [selectedInterpreters]="userModel.prefferedInterpreters"
+            *ngIf="userModel.type === 'IndividualClient' || userModel.type === 'Organisation' || userModel.type === 'OrganisationalRepresentative'"
+    ></app-interpreter-box>
+    <br>
+    <section class="actions">
+      <button name="edit_user" (click)="editUser(user_profile_form)"> SAVE </button>
+    </section>
+  </form>
+</main>
+</div>

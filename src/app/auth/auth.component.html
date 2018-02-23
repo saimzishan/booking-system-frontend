@@ -1,0 +1,47 @@
+<section id="page-login">
+	<section>
+		<aside>
+			<a href="#"><img src="assets/img/logo.png" alt=""></a>
+
+
+						<form (ngSubmit)="onSubmit()" class="common-form" #loginForm="ngForm">
+							<div class="form-field">
+													<label><i class="icon-email"></i><span>EMAIL</span></label>
+								<input type="email" id="email" name="email"
+								placeholder="Enter your email"
+								[(ngModel)]="model.email" name="email" #email="ngModel" email required >
+								<span *ngIf="email.touched && (!email.errors?.required && !email.errors?.email);" class="inline-icon inline-icon-valid valid"></span>
+								<span *ngIf="(email.dirty || email.touched) && (email.errors?.required || email.errors?.email);" class="inline-icon error">
+										<span>This field is required.</span>!</span>
+								</div>
+
+								<div class="form-field">
+							<label><i class="icon-lock"></i> PASSWORD</label>
+								<input id="pass"  type="password"
+								placeholder="Enter your password"
+								[(ngModel)]="model.password" [rangeLength]="[6, 20]" name="pass" #pass="ngModel" required>
+								<span *ngIf="pass.touched && (!pass.errors?.required && !pass.errors?.rangeLength);" class="inline-icon inline-icon-valid valid"></span>
+								<span *ngIf="(pass.dirty || pass.touched) && (pass.errors?.required || pass.errors?.rangeLength);" class="inline-icon error">
+										<span>This field is required.</span>!</span>
+
+								</div>
+							<div align="center">
+								<a name="lnkResetPass" [routerLink]="['/reset']" >Forgot your password?</a><br>
+							<button type="submit" [disabled]="!loginForm.form.valid" name="login_user" class="login button">Log In</button>
+						</div>
+						<div class="separator">
+												<div>
+													<span>or</span>
+												</div>
+											</div>
+											<div align="center">
+												<p>Don't have an account?</p>
+							<a  [routerLink]="['/register','pre']" class="signup button">CREATE AN ACCOUNT</a>
+						</div>
+				</form>
+			</aside>
+			<main>
+				<h1>INVESTING BACK INTO<br>THE DEAF COMMUNITY</h1>
+			</main>
+		</section>
+	</section>

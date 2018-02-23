@@ -1,0 +1,11 @@
+<section id="page-manage-users">
+
+    <section id="submenu">
+        <app-user-header id="main-submenu-links">
+        </app-user-header>
+    </section>
+
+    <app-user-filter></app-user-filter>
+    <app-user-list (onPageEmit)="onPageEmit($event)" [p]="page"
+                   [totalItems]="totalItems" [userList]='users' (onResetPass)="onResetPassword($event)"></app-user-list>
+</section>

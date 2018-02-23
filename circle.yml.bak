@@ -1,0 +1,45 @@
+machine:
+  node:
+    version: 7.0.0
+
+dependencies:
+    pre:
+        - npm i enhanced-resolve@3.3.0 
+        - npm install codeclimate-test-reporter -g
+        - |
+          cat >~/.netrc <<EOF
+          machine api.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_TOKEN
+          EOF
+        - chmod 600 ~/.netrc # Heroku cli complains about permissions without this
+        - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+test:
+  pre:
+    - heroku --version
+    - ng lint
+    - rm -rf tmp
+    - bundle exec pact-mock-service start -p 1233 -l tmp/booking/pact-booking.log --pact-dir tmp/booking/pacts
+    - bundle exec pact-mock-service start -p 1234 -l tmp/user/pact-user.log --pact-dir tmp/user/pacts
+    - npm run startwebdriver:
+          background: true
+  override:
+    - npm run circle-test
+    - npm run pact
+
+  post:
+    - bundle exec pact-mock-service stop -p 1233
+    - bundle exec pact-mock-service stop -p 1234
+    - mkdir $CIRCLE_ARTIFACTS/coverage
+    - mv coverage/* $CIRCLE_ARTIFACTS/coverage
+    - cp -rf tmp/ $CIRCLE_ARTIFACTS/
+    - codeclimate-test-reporter < $CIRCLE_ARTIFACTS/test-results/lcov.info
+
+deployment:
+    commands:
+    - rm -rf dist
+    - ng build --aot --env=canary
+    - aws s3 sync dist/  s3://auslan-booking-system-ct/ --delete
+    # - rm -rf dist
+    # - ng build --aot --env=stage
+    # - aws s3 sync dist/  s3://auslandemo/ --delete

@@ -1,0 +1,37 @@
+<div class="md-dialog add-interpreters">
+  <md-dialog-content>
+    <header>
+     <h1>All Interpreters</h1>
+      <button (click)="closeDialog()"><i class="icon-close"></i></button>
+    </header>
+    <main>
+      <section id="interpreters-list">
+        <section name="interpreters" *ngFor="let interpreter of interpreterList | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalItems } let ind = index;"
+                 [ngClass]="{'selected': interpreter.interpreter_id === checkedInterpreter,
+                 'interpreter_added': !isLocallyRemovedFromArray(interpreter.interpreter_id) && isAlreadyAdded(interpreter.interpreter_id)  === true}"
+                 (click)="isInterpreterSelectable(interpreter.interpreter_id)">
+          <img class="ImgSize" (click)="checkedInterpreter = interpreter.interpreter_id ;" src="{{interpreter.photo_url}}"  alt="">
+          <span>{{interpreter.first_name}} {{interpreter.last_name}}</span>
+        </section>
+      </section>
+    </main>
+  </md-dialog-content>
+  <div class="pagination">
+    <div class="element element_inline ui-grid-col-6 left text-left" id="displayTxt" *ngIf="totalItems > 0">
+      {{'Displaying ' + (((currentPage - 1) * 10) + 1) + ' - '
+      + ( interpreterList.length < 10 ? totalItems : (currentPage * 10)) + ' of ' + totalItems + ' Interpreter' +
+      (interpreterList.length > 1 ? 's' : '')}}
+    </div>
+    <div class="element element_inline ui-grid-col-6 right text-right">
+      <pagination-controls class="my-pagination" *ngIf="totalItems >= 10"
+                           (pageChange)="getPage($event)"></pagination-controls>
+    </div>
+  </div>
+  <div>
+    <md-dialog-actions>
+      <button *ngIf="checkedInterpreter > -1" name="selectBtn" (click)="addSelectedInterpreter()" class="button"> SELECT </button>
+      <button name="noBtn"  (click)="closeDialog()" class="button red"> CANCEL </button>
+    </md-dialog-actions>
+  </div>
+</div>
+	
